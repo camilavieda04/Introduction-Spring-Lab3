@@ -28,6 +28,6 @@
 
     Realizamos una prueba unitaria con EnglishSpellChecker: 
     
-    ![Capture5](https://user-images.githubusercontent.com/48154086/73947904-36e62b80-48c6-11ea-9465-7179e5708c24.PNG)
+      ![Capture5](https://user-images.githubusercontent.com/48154086/73947904-36e62b80-48c6-11ea-9465-7179e5708c24.PNG)
     
   

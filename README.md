@@ -30,4 +30,16 @@
     
       ![Capture5](https://user-images.githubusercontent.com/48154086/73947904-36e62b80-48c6-11ea-9465-7179e5708c24.PNG)
     
+    
+## Part II 
+
+1. Modify the configuration with annotations so that the Bean 'GrammarChecker' now makes use of the SpanishSpellChecker class (so that GrammarChecker is injected with EnglishSpellChecker instead of SpanishSpellChecker.) Verify the new result.
+
+    Habilitamos la etiqueta @Service en la clase SpanishSpellChecker y la documentamos en la clase EnglishSpellChecker para que no haya un conflicto en la resolución de dependencias.
+
+    ![Capture2](https://user-images.githubusercontent.com/44879884/73964484-45d9d780-48e0-11ea-93cb-155b647008ce.PNG)
+
+    Con las modificaciones realizadas tenemos como resultado:
+
+    ![Capture](https://user-images.githubusercontent.com/44879884/73964193-be8c6400-48df-11ea-938b-81f4d3f0bf04.PNG)
   

@@ -2,13 +2,13 @@
 
 ## Introduction to Spring and Configuration using annotations.
 	
-[README]([https://github.com/camilavieda04/Introduction-Spring-Lab3/tree/master/src](https://github.com/camilavieda04/Introduction-Spring-Lab3/tree/master/src))
+[README](https://github.com/camilavieda04/Introduction-Spring-Lab3/blob/master/Introduction%20to%20Spring/README.md)
 	 
 
 ## Blueprint Management 1
 
 
-[README](http://handlebarsjs.com/)
+[README](https://github.com/camilavieda04/Introduction-Spring-Lab3/blob/master/Blueprint%20Management%201/README.md)
 
 ## Integrantes: 
 	- Sarah Camila Vieda Castro

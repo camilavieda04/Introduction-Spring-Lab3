@@ -139,5 +139,31 @@ public class InMemoryPersistenceTest {
         }
 
     }
+    
+    @Test
+    public void deberiaFiltrarRepetidos() {
+        
+            ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+            BlueprintsServices ibpp = ac.getBean(BlueprintsServices.class);
+            Point[] pts = new Point[]{new Point(0, 0), new Point(0, 0)};
+            Blueprint bp = new Blueprint("juan", "thearsw", pts);
+            Point[] pts2 = new Point[]{new Point(10, 10), new Point(10, 10)};
+            Blueprint bp2 = new Blueprint("juan", "thearep", pts);
+            Point[] pts3 = new Point[]{new Point(15, 15), new Point(12, 1)};
+            Blueprint bp3 = new Blueprint("juan", "thespti", pts);
+            Point[] pts4 = new Point[]{new Point(12, 12), new Point(20, 20)};
+            Blueprint bp4 = new Blueprint("armando", "themkt4", pts);
+            
+            ibpp.addNewBlueprint(bp);
+            ibpp.addNewBlueprint(bp2);
+            ibpp.addNewBlueprint(bp3);
+            ibpp.addNewBlueprint(bp4);
+            
+            System.out.println(bp.getPoints().size());
+            ibpp.filtering();
+            System.out.println(bp.getPoints().size());
+        
+
+    }
 
 }

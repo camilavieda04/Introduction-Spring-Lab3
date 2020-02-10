@@ -9,6 +9,7 @@ import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintNotFoundException;
 import edu.eci.arsw.blueprints.persistence.BlueprintPersistenceException;
+import edu.eci.arsw.blueprints.persistence.BlueprintsFilter;
 import edu.eci.arsw.blueprints.persistence.BlueprintsPersistence;
 import edu.eci.arsw.blueprints.persistence.impl.InMemoryBlueprintPersistence;
 import java.util.LinkedHashMap;
@@ -29,7 +30,8 @@ public class BlueprintsServices {
     @Autowired
     BlueprintsPersistence bpp;
     
-     
+    @Autowired
+    BlueprintsFilter bpf;
     
     public void addNewBlueprint(Blueprint bp){
         try {
@@ -62,6 +64,14 @@ public class BlueprintsServices {
      */
     public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException{
         return bpp.getBlueprintsByAuthor(author);
+    }
+    
+    public void filtering(){
+        try {
+            bpf.filtering(getAllBlueprints());
+        } catch (BlueprintNotFoundException ex) {
+            Logger.getLogger(BlueprintsServices.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

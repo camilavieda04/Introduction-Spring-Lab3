@@ -14,6 +14,6 @@ import java.util.Set;
  */
 public interface BlueprintsFilter {
     
-    public void filtering(Set<Blueprint> blueprints);
+    public Blueprint filtering(Blueprint blueprint);
     
 }

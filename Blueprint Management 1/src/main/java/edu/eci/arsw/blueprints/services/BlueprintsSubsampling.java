@@ -17,7 +17,7 @@ import java.util.Set;
 public class BlueprintsSubsampling implements BlueprintsFilter {
 
     @Override
-    public void filtering(Set<Blueprint> blueprints) {
+    public Blueprint filtering(Blueprint blueprint) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

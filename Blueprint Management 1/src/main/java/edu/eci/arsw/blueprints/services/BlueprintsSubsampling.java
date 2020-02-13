@@ -6,19 +6,34 @@
 package edu.eci.arsw.blueprints.services;
 
 import edu.eci.arsw.blueprints.model.Blueprint;
+import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintsFilter;
-import java.util.Set;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author jimmy.chirivi
  */
-//@Service
+@Service
 public class BlueprintsSubsampling implements BlueprintsFilter {
 
     @Override
     public Blueprint filtering(Blueprint blueprint) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Point[] points = new Point[blueprint.getPoints().size()];
+        int cont = 0;
+        for(int i=0;i<blueprint.getPoints().size();i++){
+            if(i+2<=blueprint.getPoints().size()){
+                if(i%2==0){
+                    points[cont] = blueprint.getPoints().get(i);
+                    cont++;
+                }
+            }else{
+                points[cont] = blueprint.getPoints().get(i);
+                cont++;
+            }
+        }
+        Blueprint bp = new Blueprint(blueprint.getAuthor(), blueprint.getName(), points);
+        return bp;
     }
 
     

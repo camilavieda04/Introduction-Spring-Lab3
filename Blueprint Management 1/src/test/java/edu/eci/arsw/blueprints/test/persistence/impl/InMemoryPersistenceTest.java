@@ -107,9 +107,6 @@ public class InMemoryPersistenceTest {
         try {
             assertTrue(ibpp.getBlueprintsByAuthor("juan").size() == 3);
             assertTrue(ibpp.getBlueprintsByAuthor("armando").size() == 1);
-            //assertTrue(ibpp.getBlueprintsByAuthor("juan").contains(bp));
-            //assertTrue(ibpp.getBlueprintsByAuthor("juan").contains(bp2));
-            //assertTrue(ibpp.getBlueprintsByAuthor("juan").contains(bp3));
         } catch (BlueprintNotFoundException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -142,26 +139,15 @@ public class InMemoryPersistenceTest {
 
     }
     
-    @Test
-    public void deberiaFiltrarRepetidos() {
+    //@Test
+    public void deberiaFiltrarRedundancy() {
         
         try {
             ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
             BlueprintsServices ibpp = ac.getBean(BlueprintsServices.class);
-            Point[] pts = new Point[]{new Point(0, 0), new Point(0, 0)};
+            Point[] pts = new Point[]{new Point(10, 0), new Point(10, 0)};
             Blueprint bp = new Blueprint("juan", "thearsw", pts);
-            /**
-             * Point[] pts2 = new Point[]{new Point(10, 10), new Point(10, 10)};
-             * Blueprint bp2 = new Blueprint("juan", "thearep", pts);
-             * Point[] pts3 = new Point[]{new Point(15, 15), new Point(12, 1)};
-             * Blueprint bp3 = new Blueprint("juan", "thespti", pts);
-             * Point[] pts4 = new Point[]{new Point(12, 12), new Point(20, 20)};
-             * Blueprint bp4 = new Blueprint("armando", "themkt4", pts);
-             **/
             ibpp.addNewBlueprint(bp);
-            //ibpp.addNewBlueprint(bp2);
-            //ibpp.addNewBlueprint(bp3);
-            //ibpp.addNewBlueprint(bp4);
             int ans=0;
             for(int i=0;i<ibpp.getBlueprint("juan", "thearsw").getPoints().size();i++){
                 assertTrue(bp.getPoints().size() == ibpp.getBlueprint("juan", "thearsw").getPoints().size());
@@ -172,6 +158,28 @@ public class InMemoryPersistenceTest {
                 }             
             }
             assertFalse(ans == bp.getPoints().size());
+        } catch (BlueprintNotFoundException ex) {
+            Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Test
+    public void deberiFiltrarSubSampling(){
+        try {
+            ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+            BlueprintsServices ibpp = ac.getBean(BlueprintsServices.class);
+            Point[] pts = new Point[]{new Point(10, 0), new Point(10, 0),new Point(10, 30),new Point(30, 10)};
+            Blueprint bp = new Blueprint("camila", "thearsw", pts);
+            ibpp.addNewBlueprint(bp);
+            int ans=0;
+            for(int i=0;i<ibpp.getBlueprint("camila", "thearsw").getPoints().size();i++){
+                if(ibpp.getBlueprint("camila", "thearsw").getPoints().get(i)!= null){
+                    ans++;
+                }             
+            }
+            assertTrue(ans == 3);
+            assertEquals(ibpp.getBlueprint("camila", "thearsw").getPoints().get(1).getY(),30);
+            assertEquals(ibpp.getBlueprint("camila", "thearsw").getPoints().get(2).getX(),30);
         } catch (BlueprintNotFoundException ex) {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }

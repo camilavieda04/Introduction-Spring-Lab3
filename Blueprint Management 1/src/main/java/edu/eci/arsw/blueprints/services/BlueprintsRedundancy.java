@@ -8,24 +8,19 @@ package edu.eci.arsw.blueprints.services;
 import edu.eci.arsw.blueprints.model.Blueprint;
 import edu.eci.arsw.blueprints.model.Point;
 import edu.eci.arsw.blueprints.persistence.BlueprintsFilter;
-import java.util.HashSet;
-import java.util.Set;
 import org.springframework.stereotype.Service;
 
 /**
  *
  * @author jimmy.chirivi
  */
-@Service
+//@Service
 public class BlueprintsRedundancy implements BlueprintsFilter {
 
     @Override
     public Blueprint filtering(Blueprint blueprint) {
-        //Set<Point> listap = new HashSet<>(blueprint.getPoints());
-        //Point[] points = new Point[listap.size()];
         Point[] points = new Point[blueprint.getPoints().size()];
-        int cont = 0;
-        
+        int cont = 0;   
         for(int i=0;i<blueprint.getPoints().size();i++){
             if(i+1 < blueprint.getPoints().size()){
                 if(blueprint.getPoints().get(i).getX()==blueprint.getPoints().get(i+1).getX()){
@@ -37,7 +32,6 @@ public class BlueprintsRedundancy implements BlueprintsFilter {
                 cont++;
             }
         }
-           
         Blueprint bp = new Blueprint(blueprint.getAuthor(), blueprint.getName(), points);
         return bp;
     }

@@ -15,15 +15,222 @@ The above requires:
 
 Se completaron los métodos addNewBluePrint(), getAllBlueprints(), getBlueprint() y getBlueprintsByAuthor(), tanto en la clase BlueprintsServices como en la clase InMemoryBlueprintPersistence y también se adicionaron en la interface BlueprintsPersistence.
 
-![Capture3](https://user-images.githubusercontent.com/48154086/74170592-28b44a00-4bfb-11ea-822c-ed7f989b4b1d.PNG)
-![Capture4](https://user-images.githubusercontent.com/48154086/74170948-b55f0800-4bfb-11ea-8ab8-02f73b90a42a.PNG)
-![Capture5](https://user-images.githubusercontent.com/48154086/74170951-b5f79e80-4bfb-11ea-9d92-9c3af9f48021.PNG)
+``` java
 
-Y realizamos las respectivas para probar las funcionalidades implementadas anteriormente.
+public void addNewBlueprint(Blueprint bp) {
 
-![Capture7](https://user-images.githubusercontent.com/48154086/74171077-f22aff00-4bfb-11ea-9c09-d187210e7c78.PNG)
-![Capture8](https://user-images.githubusercontent.com/48154086/74171079-f2c39580-4bfb-11ea-8be4-7af4f5e13544.PNG)
-![Capture6](https://user-images.githubusercontent.com/48154086/74171080-f35c2c00-4bfb-11ea-82bb-4f4e91776d92.PNG)
+	try {
+
+	bpp.saveBlueprint(bp);
+
+	} catch (BlueprintPersistenceException ex) {
+
+	Logger.getLogger(BlueprintsServices.class.getName()).log(Level.SEVERE, null, ex);
+
+}
+
+}
+
+public Set<Blueprint> getAllBlueprints() throws BlueprintNotFoundException {
+
+	Set<Blueprint> filter = new HashSet<>();
+
+	for (Blueprint blueprint : bpp.getAllBlueprints()) {
+
+	filter.add(bpf.filtering(blueprint));
+
+	}
+
+	return filter;
+
+}
+
+/**
+
+*
+
+* @param author blueprint's author
+
+* @param name blueprint's name
+
+* @return the blueprint of the given name created by the given author
+
+* @throws BlueprintNotFoundException if there is no such blueprint
+
+*/
+
+public Blueprint getBlueprint(String author, String name) throws BlueprintNotFoundException {
+
+	System.out.println(bpf.filtering(bpp.getBlueprint(author, name)).getAuthor());
+
+	return bpf.filtering(bpp.getBlueprint(author, name));
+
+}
+
+/**
+
+*
+
+* @param author blueprint's author
+
+* @return all the blueprints of the given author
+
+* @throws BlueprintNotFoundException if the given author doesn't exist
+
+*/
+
+public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFoundException {
+
+	Set<Blueprint> filter = new HashSet<>();
+
+	for (Blueprint blueprint : bpp.getBlueprintsByAuthor(author)) {
+
+	filter.add(bpf.filtering(blueprint));
+
+	}
+
+	return filter;
+
+}
+	```
+
+Y realizamos las respectivas pruebas para probar las funcionalidades implementadas anteriormente.
+
+``` java
+
+@Test
+
+public void deberiaDarElBluePrintSegunAutorYNombre() {
+
+	ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+	BlueprintsServices ibpp = ac.getBean(BlueprintsServices.class);
+
+	Point[] pts = new Point[]{new Point(0, 0), new Point(10, 10)};
+
+	Blueprint bp = new Blueprint("sarah", "thearsw", pts);
+
+	ibpp.addNewBlueprint(bp);
+
+	System.out.println("Lo agregue");
+
+	try {
+
+	System.out.println(bp.getPoints().size());
+
+	System.out.println(ibpp.getBlueprint(bp.getAuthor(), bp.getName()).getPoints().size());
+
+	assertTrue(bp.getAuthor().equals(ibpp.getBlueprint(bp.getAuthor(), bp.getName()).getAuthor()));
+
+	assertTrue(bp.getName().equals(ibpp.getBlueprint(bp.getAuthor(), bp.getName()).getName()));
+
+	assertTrue(bp.getPoints().size() == ibpp.getBlueprint(bp.getAuthor(), bp.getName()).getPoints().size());
+
+	} catch (BlueprintNotFoundException ex) {
+
+	Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
+
+	}
+
+}
+
+@Test
+
+public void deberiaDarTodosLosBlueprintDelAutor() {
+
+	ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+	BlueprintsServices ibpp = ac.getBean(BlueprintsServices.class);
+
+	Point[] pts = new Point[]{new Point(0, 0), new Point(10, 10)};
+
+	Blueprint bp = new Blueprint("juan", "thearsw", pts);
+
+	Point[] pts2 = new Point[]{new Point(10, 10), new Point(10, 10)};
+
+	Blueprint bp2 = new Blueprint("juan", "thearep", pts);
+
+	Point[] pts3 = new Point[]{new Point(15, 15), new Point(12, 1)};
+
+	Blueprint bp3 = new Blueprint("juan", "thespti", pts);
+
+	Point[] pts4 = new Point[]{new Point(12, 12), new Point(20, 20)};
+
+	Blueprint bp4 = new Blueprint("armando", "themkt4", pts);
+
+	ibpp.addNewBlueprint(bp);
+
+	ibpp.addNewBlueprint(bp2);
+
+	ibpp.addNewBlueprint(bp3);
+
+	ibpp.addNewBlueprint(bp4);
+
+	try {
+
+	assertTrue(ibpp.getBlueprintsByAuthor("juan").size() == 3);
+
+	assertTrue(ibpp.getBlueprintsByAuthor("armando").size() == 1);
+
+	assertTrue(ibpp.getBlueprintsByAuthor("juan").contains(bp));
+
+	assertTrue(ibpp.getBlueprintsByAuthor("juan").contains(bp2));
+
+	assertTrue(ibpp.getBlueprintsByAuthor("juan").contains(bp3));
+
+	} catch (BlueprintNotFoundException ex) {
+
+	Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
+
+		}
+
+	}
+
+	@Test
+
+	public void deberiaDarTodosLosBlueprints() {
+
+	try {
+
+	ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+	BlueprintsServices ibpp = ac.getBean(BlueprintsServices.class);
+
+	Point[] pts = new Point[]{new Point(0, 0), new Point(10, 10)};
+
+	Blueprint bp = new Blueprint("juan", "thearsw", pts);
+
+	Point[] pts2 = new Point[]{new Point(10, 10), new Point(10, 10)};
+
+	Blueprint bp2 = new Blueprint("juan", "thearep", pts);
+
+	Point[] pts3 = new Point[]{new Point(15, 15), new Point(12, 1)};
+
+	Blueprint bp3 = new Blueprint("juan", "thespti", pts);
+
+	Point[] pts4 = new Point[]{new Point(12, 12), new Point(20, 20)};
+
+	Blueprint bp4 = new Blueprint("armando", "themkt4", pts);
+
+	ibpp.addNewBlueprint(bp);
+
+	ibpp.addNewBlueprint(bp2);
+
+	ibpp.addNewBlueprint(bp3);
+
+	ibpp.addNewBlueprint(bp4);
+
+	assertTrue(ibpp.getAllBlueprints().size() == 5);
+
+	} catch (BlueprintNotFoundException ex) {
+
+	Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
+
+	}
+
+}
+	```
+
 
     
 2.  Make a program in which you create (through Spring) an instance of `BlueprintServices`, and rectify its functionality: register plans, consult plans, register specific plans, etc.

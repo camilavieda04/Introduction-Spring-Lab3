@@ -59,7 +59,7 @@ public class BlueprintsServices {
      * @throws BlueprintNotFoundException if there is no such blueprint
      */
     public Blueprint getBlueprint(String author, String name) throws BlueprintNotFoundException {
-        System.out.println(bpf.filtering(bpp.getBlueprint(author, name)).getAuthor());
+        //System.out.println(bpf.filtering(bpp.getBlueprint(author, name)).getAuthor());
         return bpf.filtering(bpp.getBlueprint(author, name));
     }
 

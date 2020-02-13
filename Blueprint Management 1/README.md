@@ -298,7 +298,33 @@ public class mainClass {
 3.  You want the plan query operations to perform a filtering process, before returning the planes consulted. These filters are looking to reduce the size of the plans, removing redundant data or simply sub-sampling, before returning them. Adjust the application (adding the abstractions and implementations you consider) so that the BlueprintServices class is injected with one of two possible 'filters' (or possible future filters). The use of more than one at a time is not contemplated:
     
     1.  (A) Redundancy filtering: deletes consecutive points from the plane that are repeated.
+    
+    ``` java
+    @Override
+    public Blueprint filtering(Blueprint blueprint) {
+        //Set<Point> listap = new HashSet<>(blueprint.getPoints());
+        //Point[] points = new Point[listap.size()];
+        Point[] points = new Point[blueprint.getPoints().size()];
+        int cont = 0;
         
+        for(int i=0;i<blueprint.getPoints().size();i++){
+            if(i+1 < blueprint.getPoints().size()){
+                if(blueprint.getPoints().get(i).getX()==blueprint.getPoints().get(i+1).getX()){
+                    if(blueprint.getPoints().get(i).getY()==blueprint.getPoints().get(i+1).getY()){
+                        i++;
+                    }
+                }
+                points[cont] = blueprint.getPoints().get(i);
+                cont++;
+            }
+        }
+           
+        Blueprint bp = new Blueprint(blueprint.getAuthor(), blueprint.getName(), points);
+        return bp;
+    }
+    
+    ```
+    
     2.  (B) Subsampling filtering: suppresses 1 out of every 2 points in the plane, interspersed.
         
     

@@ -184,5 +184,4 @@ public class InMemoryPersistenceTest {
             Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }

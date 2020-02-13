@@ -300,32 +300,55 @@ public class mainClass {
     1.  (A) Redundancy filtering: deletes consecutive points from the plane that are repeated.
     
     ``` java
-    @Override
-    public Blueprint filtering(Blueprint blueprint) {
-        //Set<Point> listap = new HashSet<>(blueprint.getPoints());
-        //Point[] points = new Point[listap.size()];
-        Point[] points = new Point[blueprint.getPoints().size()];
-        int cont = 0;
-        
-        for(int i=0;i<blueprint.getPoints().size();i++){
-            if(i+1 < blueprint.getPoints().size()){
-                if(blueprint.getPoints().get(i).getX()==blueprint.getPoints().get(i+1).getX()){
-                    if(blueprint.getPoints().get(i).getY()==blueprint.getPoints().get(i+1).getY()){
-                        i++;
-                    }
-                }
-                points[cont] = blueprint.getPoints().get(i);
-                cont++;
-            }
-        }
-           
-        Blueprint bp = new Blueprint(blueprint.getAuthor(), blueprint.getName(), points);
-        return bp;
-    }
-    
+    @Service
+	public class BlueprintsRedundancy implements BlueprintsFilter {
+
+	    @Override
+	    public Blueprint filtering(Blueprint blueprint) {
+		Point[] points = new Point[blueprint.getPoints().size()];
+		int cont = 0;   
+		for(int i=0;i<blueprint.getPoints().size();i++){
+		    if(i+1 < blueprint.getPoints().size()){
+			if(blueprint.getPoints().get(i).getX()==blueprint.getPoints().get(i+1).getX()){
+			    if(blueprint.getPoints().get(i).getY()==blueprint.getPoints().get(i+1).getY()){
+				i++;
+			    }
+			}
+			points[cont] = blueprint.getPoints().get(i);
+			cont++;
+		    }
+		}
+		Blueprint bp = new Blueprint(blueprint.getAuthor(), blueprint.getName(), points);
+		return bp;
+	    }
+	}
     ```
     
     2.  (B) Subsampling filtering: suppresses 1 out of every 2 points in the plane, interspersed.
+    
+    ``` java
+    @Service
+	public class BlueprintsSubsampling implements BlueprintsFilter {
+	    @Override
+	    public Blueprint filtering(Blueprint blueprint) {
+		Point[] points = new Point[blueprint.getPoints().size()];
+		int cont = 0;
+		for(int i=0;i<blueprint.getPoints().size();i++){
+		    if(i+2<=blueprint.getPoints().size()){
+			if(i%2==0){
+			    points[cont] = blueprint.getPoints().get(i);
+			    cont++;
+			}
+		    }else{
+			points[cont] = blueprint.getPoints().get(i);
+			cont++;
+		    }
+		}
+		Blueprint bp = new Blueprint(blueprint.getAuthor(), blueprint.getName(), points);
+		return bp;
+	    } 
+	}
+    ```
         
     
 4.  Add the corresponding tests to each of these filters, and test its operation in the test program, verifying that only by changing the position of the annotations - without changing anything else - the program returns the filtered planes in the way (A) or in the way (B).
@@ -367,5 +390,30 @@ public class mainClass {
 		    Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	    }
-	   				
 	```
+	
+	2. Subsampling Filter Test
+	
+	``` java
+	    @Test
+	    public void deberiFiltrarSubSampling(){
+		try {
+		    ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+		    BlueprintsServices ibpp = ac.getBean(BlueprintsServices.class);
+		    Point[] pts = new Point[]{new Point(10, 0), new Point(10, 0),new Point(10, 30),new Point(30, 10)};
+		    Blueprint bp = new Blueprint("camila", "thearsw", pts);
+		    ibpp.addNewBlueprint(bp);
+		    int ans=0;
+		    for(int i=0;i<ibpp.getBlueprint("camila", "thearsw").getPoints().size();i++){
+			if(ibpp.getBlueprint("camila", "thearsw").getPoints().get(i)!= null){
+			    ans++;
+			}             
+		    }
+		    assertTrue(ans == 3);
+		    assertEquals(ibpp.getBlueprint("camila", "thearsw").getPoints().get(1).getY(),30);
+		    assertEquals(ibpp.getBlueprint("camila", "thearsw").getPoints().get(2).getX(),30);
+		} catch (BlueprintNotFoundException ex) {
+		    Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	    }
+    ```

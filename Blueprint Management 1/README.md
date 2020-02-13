@@ -92,9 +92,11 @@ public Set<Blueprint> getBlueprintsByAuthor(String author) throws BlueprintNotFo
 	return filter;
 
 }
-	```
+```
+
 
 Y realizamos las respectivas pruebas para probar las funcionalidades implementadas anteriormente.
+
 
 ``` java
 
@@ -229,7 +231,7 @@ public void deberiaDarTodosLosBlueprintDelAutor() {
 	}
 
 }
-	```
+```
 
 
     

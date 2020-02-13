@@ -329,3 +329,43 @@ public class mainClass {
         
     
 4.  Add the corresponding tests to each of these filters, and test its operation in the test program, verifying that only by changing the position of the annotations - without changing anything else - the program returns the filtered planes in the way (A) or in the way (B).
+
+	1. Redundancy Filter Test
+	
+    ``` java
+	 @Test
+   	 public void deberiaFiltrarRepetidos() {
+        
+		try {
+		    ApplicationContext ac = new ClassPathXmlApplicationContext("applicationContext.xml");
+		    BlueprintsServices ibpp = ac.getBean(BlueprintsServices.class);
+		    Point[] pts = new Point[]{new Point(0, 0), new Point(0, 0)};
+		    Blueprint bp = new Blueprint("juan", "thearsw", pts);
+		    /**
+		     * Point[] pts2 = new Point[]{new Point(10, 10), new Point(10, 10)};
+		     * Blueprint bp2 = new Blueprint("juan", "thearep", pts);
+		     * Point[] pts3 = new Point[]{new Point(15, 15), new Point(12, 1)};
+		     * Blueprint bp3 = new Blueprint("juan", "thespti", pts);
+		     * Point[] pts4 = new Point[]{new Point(12, 12), new Point(20, 20)};
+		     * Blueprint bp4 = new Blueprint("armando", "themkt4", pts);
+		     **/
+		    ibpp.addNewBlueprint(bp);
+		    //ibpp.addNewBlueprint(bp2);
+		    //ibpp.addNewBlueprint(bp3);
+		    //ibpp.addNewBlueprint(bp4);
+		    int ans=0;
+		    for(int i=0;i<ibpp.getBlueprint("juan", "thearsw").getPoints().size();i++){
+			assertTrue(bp.getPoints().size() == ibpp.getBlueprint("juan", "thearsw").getPoints().size());
+			if(ibpp.getBlueprint("juan", "thearsw").getPoints().get(i)!= null){
+			    assertTrue(bp.getPoints().get(i).getX() == ibpp.getBlueprint("juan", "thearsw").getPoints().get(i).getX());
+			    assertTrue(bp.getPoints().get(i).getY() == ibpp.getBlueprint("juan", "thearsw").getPoints().get(i).getY());
+			    ans++;
+			}             
+		    }
+		    assertFalse(ans == bp.getPoints().size());
+		} catch (BlueprintNotFoundException ex) {
+		    Logger.getLogger(InMemoryPersistenceTest.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	    }
+	   				
+	```
